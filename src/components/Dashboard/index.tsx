@@ -1,4 +1,6 @@
 'use client';
+
+import { DocumentList } from '../DocumentList';
 import FileUploadButton from '../FileUploadButton';
 
 export function Dashboard() {
@@ -17,6 +19,9 @@ export function Dashboard() {
 			<main>
 				<div className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8'>
 					{/* Your content */}
+					<div className='rounded border border-slate-100 mx-10 p-7 max-w-2xl'>
+						<DocumentList />
+					</div>
 				</div>
 			</main>
 		</>

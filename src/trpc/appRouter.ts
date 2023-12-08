@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { auth, currentUser } from '@clerk/nextjs';
-import { publicProcedure, router } from './trpc';
+import { publicProcedure, privateProcedure, router } from './trpc';
 import { prisma as db } from '@/lib/prisma';
 import { TRPCError } from '@trpc/server';
 
@@ -35,6 +35,34 @@ export const appRouter = router({
 		}
 		return response;
 	}),
+	getDocs: privateProcedure.query(async ({ ctx }) => {
+		const docs = await db.docs.findMany({
+			where: {
+				owner_id: ctx.userId,
+			},
+		});
+		return docs;
+	}),
+	deleteDocs: privateProcedure
+		.input(z.object({ id: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			// Check if document exists
+			const doc = await db.docs.findFirst({
+				where: {
+					id: input.id,
+					owner_id: ctx.userId,
+				},
+			});
+			if (!doc) throw new TRPCError({ code: 'NOT_FOUND' });
+			// Delete document
+			await db.docs.delete({
+				where: {
+					id: input.id,
+					owner_id: ctx.userId,
+				},
+			});
+			return doc;
+		}),
 });
 
 // export type definition of API

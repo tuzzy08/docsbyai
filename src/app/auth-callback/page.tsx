@@ -11,7 +11,7 @@ export default function AuthCallBackPage() {
 	// Get origin where user was redirected from
 	const origin = searchParams.get('origin');
 	// Check if user is synced/saved to DB
-	const { isError, error, data } = trpc.authCallback.useQuery();
+	const { isError, data } = trpc.authCallback.useQuery();
 
 	useEffect(() => {
 		if (isError) router.push('/sign-in');

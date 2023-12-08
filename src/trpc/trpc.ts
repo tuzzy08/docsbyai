@@ -12,9 +12,7 @@ const middleware = t.middleware;
 // authenticated before calling the API route
 const isAuth = middleware(async (opts) => {
 	const { user, userId } = auth();
-	if (!userId) {
-		throw new TRPCError({ code: 'UNAUTHORIZED' });
-	}
+	if (!userId) throw new TRPCError({ code: 'UNAUTHORIZED' });
 	return opts.next({
 		ctx: {
 			user,

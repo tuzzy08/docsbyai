@@ -25,10 +25,12 @@ model User {
 }
 
 model Docs {
-  id        String  @id @unique
-  doc_name  String
-  user_id   String
-  User      User    @relation(fields: [user_id], references: [id])
+  id          String      @id @default(cuid())
+  title       String
+  owner_id    String
+  User        User    @relation(fields: [owner_id], references: [id])
+  size        Int
+  uploadDate  DateTime @default(now())
 }
 
 model Subscriptions {

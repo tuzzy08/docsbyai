@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Providers, PostHogPageview } from '@/components/Providers';
 import './globals.css';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const inter = Inter({
 	subsets: ['latin'],
