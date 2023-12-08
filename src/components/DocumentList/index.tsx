@@ -5,6 +5,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Trash2, FileEdit } from 'lucide-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
+import Link from 'next/link';
 
 type Document = {
 	id: String;
@@ -46,7 +47,9 @@ export function DocumentList() {
 							className='flex justify-between items-center pt-2'
 						>
 							<div className='flex flex-col justify-center'>
-								<span>{doc.title}</span>
+								<span>
+									<Link href={`/dashboard/${doc.id}`}>{doc.title}</Link>
+								</span>
 								<span className='self-start text-slate-400 text-xs'>{`uploaded ${format(
 									new Date(doc.uploadDate),
 									'd MMM yy'
