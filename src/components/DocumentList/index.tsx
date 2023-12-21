@@ -6,6 +6,7 @@ import { Trash2, FileEdit } from 'lucide-react';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 type Document = {
 	id: String;
@@ -15,11 +16,11 @@ type Document = {
 };
 
 export function DocumentList() {
+	const router = useRouter();
 	const { data: docs, isLoading } = trpc.getDocs.useQuery();
 	const [currentlyDeleting, setCurrentlyDeleting] = useState<string | null>(
 		null
 	);
-
 	const utils = trpc.useContext();
 	const { mutate: deleteDoc } = trpc.deleteDocs.useMutation({
 		onSuccess: () => {
@@ -50,13 +51,19 @@ export function DocumentList() {
 								<span>
 									<Link href={`/dashboard/${doc.id}`}>{doc.title}</Link>
 								</span>
-								<span className='self-start text-slate-400 text-xs'>{`uploaded ${format(
-									new Date(doc.uploadDate),
-									'd MMM yy'
-								)}`}</span>
+								<div className='flex flex-row gap-1'>
+									<span className='text-slate-400 text-[9px]'>{`${doc.size}mb`}</span>
+									<span className=' text-slate-400 text-[9px]'>{`uploaded ${format(
+										new Date(doc.uploadDate),
+										'MMM-yy'
+									)}`}</span>
+								</div>
 							</div>
 							<span className='flex justify-center gap-1'>
-								<button className='inline-flex items-center px-2 py-1 gap-x-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 bg-slate-400 hover:bg-slate-300 text-white text-sm font-medium rounded-md'>
+								<button
+									onClick={() => router.push(`/dashboard/${doc.id}`)}
+									className='inline-flex items-center px-2 py-1 gap-x-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 bg-slate-400 hover:bg-slate-300 text-white text-sm font-medium rounded-md'
+								>
 									<FileEdit size={16} color='white' />
 								</button>
 								<button
