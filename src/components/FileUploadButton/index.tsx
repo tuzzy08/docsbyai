@@ -27,29 +27,37 @@ export default function FileUploadButton() {
 
 	async function handleUpload(file: File) {
 		if (!file) return;
-		// Generate pre-signed URL
-		const response = await fetch('/api/upload/getSignedURL', {
-			method: 'POST',
-			cache: 'no-store',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ filename: file.name }),
-		});
-		const { signedUrl } = await response.json();
-		// Upload file
-		const response_from_clouflare = await fetch(signedUrl, {
-			method: 'PUT',
-			body: file,
-		});
-
-		if (response_from_clouflare.status === 200) {
-			const result = await onUploadComplete({
-				title: file.name,
-				size: file.size,
+		try {
+			// Generate pre-signed URL
+			const response = await fetch('/api/upload/getSignedURL', {
+				method: 'POST',
+				cache: 'no-store',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ filename: file.name }),
 			});
-			setUploadedFile(null);
-			return result;
+			const { signedUrl } = await response.json();
+			// Upload file
+			const response_from_clouflare = await fetch(signedUrl, {
+				method: 'PUT',
+				body: file,
+			});
+
+			if (response_from_clouflare.status === 200) {
+				try {
+					const result = await onUploadComplete({
+						title: file.name,
+						size: file.size,
+					});
+					setUploadedFile(null);
+					return result;
+				} catch (error) {
+					console.log(error);
+				}
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	}
 

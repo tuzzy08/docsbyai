@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { auth, currentUser } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs';
+import { TRPCError } from '@trpc/server';
 import { S3 } from '@/lib/cloudflare_r2';
 
 export async function POST(request: Request) {
+	// Check if the user is authorized
+	const { userId } = auth();
+	if (!userId) throw new TRPCError({ code: 'UNAUTHORIZED' });
+	// Get filename from request body
 	const body = await request.json();
+	// Get signed url from cloudflare R2
 	const signedUrl = await getSignedUrl(
 		S3,
 		new PutObjectCommand({
