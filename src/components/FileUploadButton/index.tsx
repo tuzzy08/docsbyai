@@ -10,56 +10,53 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { z } from 'zod';
-import { trpc } from '@/app/_trpc/client';
 import { Button } from '@/components/ui/button';
 import { UploadIcon } from '@radix-ui/react-icons';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud } from 'lucide-react';
+import { onUploadComplete } from '@/lib/middleware';
 
 export default function FileUploadButton() {
-	const [uploadedFile, setUploadedFile] = useState<File>();
-	// const utils = trpc.useContext();
-
+	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+	// React DropZone config
 	const onDrop = useCallback((acceptedFiles: File[]) => {
 		console.log(acceptedFiles[0]);
 		const file = acceptedFiles[0];
 		setUploadedFile(file);
 	}, []);
 
-	async function handleUpload(filename: string) {
-		if (!uploadedFile) return;
-		const response = await fetch('/api/upload', {
+	async function handleUpload(file: File) {
+		if (!file) return;
+		// Generate pre-signed URL
+		const response = await fetch('/api/upload/getSignedURL', {
 			method: 'POST',
 			cache: 'no-store',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ filename }),
+			body: JSON.stringify({ filename: file.name }),
 		});
 		const { signedUrl } = await response.json();
-		console.log(signedUrl);
 		// Upload file
-		const res = await fetch(signedUrl, {
+		const response_from_clouflare = await fetch(signedUrl, {
 			method: 'PUT',
-			body: uploadedFile,
+			body: file,
 		});
-		console.log(res);
+
+		if (response_from_clouflare.status === 200) {
+			const result = await onUploadComplete({
+				title: file.name,
+				size: file.size,
+			});
+			setUploadedFile(null);
+			return result;
+		}
 	}
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop,
 		multiple: false,
 	});
-
-	// if (uploadedFile) {
-	// 	const { data: uploadURL } = trpc.getUploadUrl.useQuery({
-	// 		filename: `${uploadedFile?.name}`,
-	// 	});
-	// 	console.log(uploadURL);
-	// 	utils.getUploadUrl.invalidate({ filename: `${uploadedFile?.name}` });
-	// }
-
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -97,7 +94,7 @@ export default function FileUploadButton() {
 					</DialogClose>
 					{uploadedFile ? (
 						<button
-							onClick={() => handleUpload(uploadedFile.name)}
+							onClick={() => handleUpload(uploadedFile)}
 							className='btn btn-sm btn-primary self-end'
 						>
 							upload

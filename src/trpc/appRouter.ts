@@ -1,6 +1,4 @@
 import { z } from 'zod';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { auth, currentUser } from '@clerk/nextjs';
 import { publicProcedure, privateProcedure, router } from './trpc';
 import { prisma as db } from '@/lib/prisma';

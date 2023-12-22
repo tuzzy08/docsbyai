@@ -52,7 +52,9 @@ export function DocumentList() {
 									<Link href={`/dashboard/${doc.id}`}>{doc.title}</Link>
 								</span>
 								<div className='flex flex-row gap-1'>
-									<span className='text-slate-400 text-[9px]'>{`${doc.size}mb`}</span>
+									<span className='text-slate-400 text-[9px]'>{`${
+										doc.size / 1000000
+									}mb`}</span>
 									<span className=' text-slate-400 text-[9px]'>{`uploaded ${format(
 										new Date(doc.uploadDate),
 										'MMM-yy'
