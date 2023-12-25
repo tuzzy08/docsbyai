@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { handleDelete } from '@/lib/uploadHelpers';
 
 type Document = {
 	id: String;
@@ -69,7 +70,10 @@ export function DocumentList() {
 									<FileEdit size={16} color='white' />
 								</button>
 								<button
-									onClick={() => deleteDoc({ id: doc.id })}
+									onClick={async () => {
+										deleteDoc({ id: doc.id });
+										await handleDelete(doc.title);
+									}}
 									className='inline-flex items-center px-2 py-1 gap-x-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md'
 								>
 									<Trash2 size={16} color='white' />

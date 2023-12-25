@@ -14,7 +14,7 @@ export async function onUploadComplete({
 	if (!userId) {
 		throw new Error('You must be signed in to upload a document');
 	}
-	if (!title || !size) return;
+	if (!title || !size) throw new Error('Invalid title and/or Size');
 	try {
 		return await db.docs.create({
 			data: {

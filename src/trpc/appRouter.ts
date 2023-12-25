@@ -55,6 +55,7 @@ export const appRouter = router({
 			});
 			if (!doc) throw new TRPCError({ code: 'NOT_FOUND' });
 			// Delete document
+
 			await db.docs.delete({
 				where: {
 					id: input.id,
