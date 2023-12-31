@@ -9,13 +9,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { handleDelete } from '@/lib/uploadHelpers';
 
-type Document = {
-	id: String;
-	title: String;
-	uploadDate: String;
-	size: Number;
-};
-
 export function DocumentList() {
 	const router = useRouter();
 	const { data: docs, isLoading } = trpc.getDocs.useQuery();

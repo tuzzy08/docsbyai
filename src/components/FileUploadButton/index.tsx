@@ -11,18 +11,22 @@ import {
 	DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { UploadIcon } from '@radix-ui/react-icons';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud } from 'lucide-react';
 import { handleUpload } from '@/lib/uploadHelpers';
 
 export default function FileUploadButton() {
+	const [hasPickedFile, setHasPickedFile] = useState<boolean>(false);
 	const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-	const [isUploading, setIsUploading] = useState<Boolean>(false);
+	const [isUploading, setIsUploading] = useState<boolean>(false);
+	const [progress, setProgress] = useState<number>(0);
 	// React DropZone config
 	const onDrop = useCallback((acceptedFiles: File[]) => {
 		const file = acceptedFiles[0];
 		setUploadedFile(file);
+		setHasPickedFile(true);
 	}, []);
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -37,7 +41,10 @@ export default function FileUploadButton() {
 					<UploadIcon className='mr-2 h-6 w-6' /> upload
 				</Button>
 			</DialogTrigger>
-			<DialogContent className='sm:max-w-md'>
+			<DialogContent
+				className='sm:max-w-md'
+				onInteractOutside={(e) => e.preventDefault()}
+			>
 				<DialogHeader>
 					<DialogTitle>Share link</DialogTitle>
 					<div
@@ -49,6 +56,15 @@ export default function FileUploadButton() {
 							<p className='text-sm'>
 								Drag &amp; drop some files here, or click to select files
 							</p>
+
+							{uploadedFile ? (
+								<span className='text-slate-400 text-[9px] mt-6'>
+									{`${uploadedFile.name}`}
+								</span>
+							) : null}
+							{isUploading ? (
+								<Progress value={progress} className='w-[60%] mt-7 h-1' />
+							) : null}
 						</div>
 						<input {...getInputProps()} />
 					</div>
@@ -64,18 +80,19 @@ export default function FileUploadButton() {
 					<DialogClose asChild>
 						<button className='btn btn-sm'>close</button>
 					</DialogClose>
-					{uploadedFile ? (
-						<button
-							onClick={async () => {
-								setIsUploading(true);
-								await handleUpload(uploadedFile);
-								setUploadedFile(null);
-							}}
-							className='btn btn-sm btn-primary self-end'
-						>
-							upload
-						</button>
-					) : null}
+					<button
+						onClick={async () => {
+							// setIsUploading(true);
+							setHasPickedFile(false);
+							await handleUpload(uploadedFile, setProgress, setIsUploading);
+							setUploadedFile(null);
+							setIsUploading(false);
+						}}
+						className='btn btn-sm btn-primary self-end'
+						disabled={!hasPickedFile}
+					>
+						upload
+					</button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

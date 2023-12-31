@@ -25,7 +25,7 @@ model User {
 }
 
 model Docs {
-  id          String      @id @default(cuid())
+  id          String      @id
   title       String
   owner_id    String
   User        User    @relation(fields: [owner_id], references: [id])

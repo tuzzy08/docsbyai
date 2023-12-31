@@ -1,24 +1,29 @@
-import {
-	getUploadUrl,
-	onUploadComplete,
-	uploadFile,
-} from '@/lib/uploadHelpers';
+import { Dispatch, SetStateAction } from 'react';
+import { createId } from '@paralleldrive/cuid2';
+import { savePdfToDb, uploadFile } from '@/lib/uploadHelpers';
 
-export async function handleUpload(file: File | null) {
+export async function handleUpload(
+	file: File | null,
+	setProgress: Dispatch<SetStateAction<number>>,
+	setIsUploading: Dispatch<SetStateAction<boolean>>
+) {
 	if (!file) return;
 	try {
-		const signedUrl = await getUploadUrl(file.name);
-		console.log(signedUrl);
 		// Upload file
-		const response = await uploadFile(file, signedUrl);
+		setIsUploading(true);
+		const id = createId();
+		const response = await uploadFile({ file, id, setProgress });
+
 		console.log(response);
 		if (response.status === 200) {
-			const result = await onUploadComplete({
+			const result = await savePdfToDb({
+				id,
 				title: file.name,
 				size: file.size,
 			});
 
 			console.log(result);
+			setProgress(0);
 			return result;
 		}
 	} catch (error) {

@@ -3,10 +3,12 @@
 import { auth } from '@clerk/nextjs';
 import { prisma as db } from '@/lib/prisma';
 
-export async function onUploadComplete({
+export async function savePdfToDb({
+	id,
 	title,
 	size,
 }: {
+	id: string;
 	title: string;
 	size: number;
 }) {
@@ -18,6 +20,7 @@ export async function onUploadComplete({
 	try {
 		return await db.docs.create({
 			data: {
+				id,
 				title,
 				size,
 				owner_id: userId,

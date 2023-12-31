@@ -6,13 +6,17 @@ import { prisma as db } from '@/lib/prisma';
 export default async function DashboardPage() {
 	const { user: current_user } = auth();
 
-	const user = await db.user.findFirst({
-		where: {
-			id: current_user?.id,
-		},
-	});
+	try {
+		const user = await db.user.findFirst({
+			where: {
+				id: current_user?.id,
+			},
+		});
 
-	if (!user) redirect('/auth-callback?origin=dashboard');
+		if (!user) redirect('/auth-callback?origin=dashboard');
+	} catch (error) {
+		console.error(error);
+	}
 
 	return (
 		<>

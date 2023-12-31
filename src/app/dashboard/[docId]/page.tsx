@@ -1,10 +1,19 @@
-interface PageProps {
-	params: {
-		docId: String;
-	};
-}
+import { downloadFile } from '@/lib/uploadHelpers/downloadFile';
+import { PdfViewer } from '@/components/PdfViewer';
 
-export default function DocumentPage({ params }: PageProps) {
+export default async function DocumentPage({
+	params,
+}: {
+	params: {
+		docId: string;
+	};
+}) {
 	const { docId } = params;
-	return <div>{docId}</div>;
+	const { signedUrl, response } = await downloadFile(docId);
+	console.log(response);
+	return (
+		<div>
+			<PdfViewer url={signedUrl} />
+		</div>
+	);
 }
