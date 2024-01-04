@@ -1,7 +1,7 @@
 'use client';
 
-import { DocumentList } from '../DocumentList';
-import FileUploadButton from '../FileUploadButton';
+import { DocumentList } from './DocumentList';
+import FileUploadButton from './FileUploadButton';
 
 export function Dashboard() {
 	return (
