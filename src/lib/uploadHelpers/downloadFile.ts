@@ -16,7 +16,5 @@ export async function downloadFile(key: string) {
 		}),
 		{ expiresIn: 3600 }
 	);
-
-	const response = await fetch(signedUrl);
-	return { signedUrl, response };
+	return { signedUrl };
 }
