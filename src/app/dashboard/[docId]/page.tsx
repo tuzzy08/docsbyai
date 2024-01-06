@@ -12,11 +12,11 @@ export default async function DocumentPage({
 	const { docId } = params;
 	const { signedUrl } = await downloadFile(docId);
 	return (
-		<div className='flex flex-wrap w-full mb-2'>
-			<div className='md:w-3/5 w-full'>
+		<div className='flex flex-wrap w-full mb-2 mt-5'>
+			<div className='md:w-2/4 w-full'>
 				<PdfViewer url={signedUrl} />
 			</div>
-			<div className='md:w-2/5 w-full md:mt-0 mt-4'>
+			<div className='md:w-2/4 w-full md:mt-0 mt-4'>
 				<ChatComponent />
 			</div>
 		</div>
