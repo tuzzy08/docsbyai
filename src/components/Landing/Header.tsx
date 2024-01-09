@@ -5,8 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Popover, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-
-import { Button } from './Button';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { Container } from './Container';
 import { Logo } from './Logo';
 import { NavLink } from './NavLink';
@@ -100,6 +100,7 @@ function MobileNavigation() {
 }
 
 export function Header() {
+	const router = useRouter();
 	return (
 		<header className='py-10'>
 			<Container>
@@ -119,7 +120,7 @@ export function Header() {
 						<div className='hidden md:block'>
 							<NavLink href='/sign-in'>Sign in</NavLink>
 						</div>
-						<Button href='/sign-up' color='blue'>
+						<Button onClick={() => router.push('/sign-up')} color='blue'>
 							<span>
 								Get started <span className='hidden lg:inline'>today</span>
 							</span>

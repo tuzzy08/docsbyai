@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
-import { Button } from './Button';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { Container } from './Container';
 import AlexanderHipp from '@/images/headshots/alexander-hipp.png';
 import Christina from '@/images/headshots/christina.png';
@@ -11,6 +12,7 @@ import Linkedin from '@/images/headshots/linkedin.png';
 import RyanHoffman from '@/images/headshots/ryan-hoffman.png';
 
 export function Hero() {
+	const router = useRouter();
 	return (
 		<section className='pb-16 px-4 sm:px-6 pt-20 text-center lg:pt-24 bg-indigo-50'>
 			<h1 className='mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl'>
@@ -37,13 +39,10 @@ export function Hero() {
 				lets you get the exact information you need when you need it.
 			</p>
 			<div className='mt-10 flex justify-center gap-x-6'>
-				<Button href='/register' color='blue'>
+				<Button onClick={() => router.push('/register')} color='blue'>
 					Get started now
 				</Button>
-				<Button
-					href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-					variant='outline'
-				>
+				<Button variant='outline'>
 					<svg
 						aria-hidden='true'
 						className='h-3 w-3 flex-none fill-blue-600 group-active:fill-current'
