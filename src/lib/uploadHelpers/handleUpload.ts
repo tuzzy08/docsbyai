@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { createId } from '@paralleldrive/cuid2';
 import { savePdfToDb, uploadFile } from '@/lib/uploadHelpers';
+import { vectorizeDoc } from './vectorizeDoc';
 
 export async function handleUpload(
 	file: File | null,
@@ -24,6 +25,7 @@ export async function handleUpload(
 
 			console.log(result);
 			setProgress(0);
+			await vectorizeDoc(id);
 			return result;
 		}
 	} catch (error) {

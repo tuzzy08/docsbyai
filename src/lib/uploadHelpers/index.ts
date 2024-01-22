@@ -3,4 +3,4 @@ export * from './uploadFile';
 export * from './handleUpload';
 export * from './handleDelete';
 export * from './deleteFile';
-export * from './downloadFile';
+export * from './getDownloadUrl';

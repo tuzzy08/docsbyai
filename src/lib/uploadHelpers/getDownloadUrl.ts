@@ -1,9 +1,11 @@
+'use server';
+
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { auth } from '@clerk/nextjs';
 import { S3 } from '@/lib/cloudflare_r2';
 
-export async function downloadFile(key: string) {
+export async function getDownloadUrl(key: string) {
 	// Check if the user is authorized
 	const { userId } = auth();
 	if (!userId) throw new Error('UNAUTHORIZED');
